@@ -47,7 +47,7 @@ for obj in leak_dists:
         obj.update({'leaks': load_from_XLS(*obj['dist'])})
         cumsum, leaks = get_cumsum(leaks=obj['leaks'])
         obj.update({'cumsum': cumsum, 'leaks': leaks})
-    else:
+    else: 
         obj.update(
             {'fit_dist': sp.stats.lognorm(obj['dist'][1], loc=0, scale=np.exp(obj['dist'][0]))})
         cumsum, leaks = get_cumsum(dist=obj['fit_dist'])
