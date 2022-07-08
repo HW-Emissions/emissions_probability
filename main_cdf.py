@@ -10,9 +10,9 @@ import numpy as np
 from statsmodels.distributions.empirical_distribution import ECDF
 from plot import style, plt  # noqa: F401
 from funcs import get_cumsum, load_from_XLS
-from fit import log_fit_scotts
 
 # --- User Inputs ---
+
 leak_rate_unit = 'kg/hr'
 fit_distribution = "lognorm"
 # scypi distribution types
@@ -38,6 +38,21 @@ for obj in leak_dists:
     dist = getattr(sp.stats, fit_distribution)
     params = dist.fit(obj['leaks'], floc=0)
     dist = dist(params[:-2], params[-2], scale=params[-1])
+    if fit_distribution == 'lognorm':
+      print("{}: {} has parameters mu={}, sigma={}".format(
+          obj['name'], 
+          fit_distribution,  
+          np.around(np.log(params[-1]), 3), 
+          np.around(params[0], 3)
+      ))
+    else:
+      print("{}: {} has parameters scale={}, shape={}".format(
+          obj['name'], 
+          fit_distribution,  
+          np.around(params[-1], 3), 
+          np.around(params[:-2], 3)
+      ))
+
     fcumsum, fleaks = get_cumsum(dist=dist, decending = False)
     obj.update(
       {'ecumsum': ecumsum, 
